@@ -15,7 +15,7 @@ $ALLOWED_ORIGINS = [
     'https://vegamoviedownloadhd.blogspot.com',
     'https://hindidubbedmoviesdownloadhd.blogspot.com',
     'https://khatrimazaorgmoviedownload.blogspot.com',
-    'https://filmy4webmoviesdownload.blogspot.com' // NEW DOMAIN ADDED
+    'https://vidfilmer.blogspot.com' // NEW DOMAIN ADDED
 ];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
@@ -33,7 +33,7 @@ header('Content-Type: application/json');
 header('X-Robots-Tag: noindex, nofollow'); 
 
 // 2. CONFIGURATION
-define('TMDB_API_KEY', 'XXXXXXXX_XXXXXXX_XXX');
+define('TMDB_API_KEY', '1ca74281e9b4d40433c2e8840a78d841');
 define('TMDB_BASE_URL', 'https://api.themoviedb.org/3');
 define('CACHE_PATH', __DIR__ . '/cache/');
 
