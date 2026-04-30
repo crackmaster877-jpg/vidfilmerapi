@@ -7,7 +7,8 @@
 //  - GoDrive/2Embed Exact Pattern Logic
 //  - Hybrid Cache (Long for Data, Short for Links)
 // =========================================================
-
+error_reporting(0);
+ini_set('display_errors', 0);
 // 1. SECURITY: DOMAIN LOCKING
 $ALLOWED_ORIGINS = [
     'https://filmyzillamoviedownloadlink.blogspot.com',
