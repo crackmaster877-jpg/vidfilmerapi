@@ -11,11 +11,6 @@ error_reporting(0);
 ini_set('display_errors', 0);
 // 1. SECURITY: DOMAIN LOCKING
 $ALLOWED_ORIGINS = [
-    'https://filmyzillamoviedownloadlink.blogspot.com',
-    'https://bollyflixmoviedownload.blogspot.com',
-    'https://vegamoviedownloadhd.blogspot.com',
-    'https://hindidubbedmoviesdownloadhd.blogspot.com',
-    'https://khatrimazaorgmoviedownload.blogspot.com',
     'https://vidfilmer.blogspot.com' // NEW DOMAIN ADDED
 ];
 
