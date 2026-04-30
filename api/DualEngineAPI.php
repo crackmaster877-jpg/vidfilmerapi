@@ -38,28 +38,8 @@ define('TMDB_BASE_URL', 'https://api.themoviedb.org/3');
 define('CACHE_PATH', __DIR__ . '/cache/');
 
 // 3. CACHE SYSTEM (Auto-Garbage Collection)
-function getCached($key, $duration = 3600) {
-    $file = CACHE_PATH . md5($key) . '.json';
-    if (file_exists($file)) {
-        if ((time() - filemtime($file)) < $duration) {
-            return json_decode(file_get_contents($file), true);
-        } else { @unlink($file); }
-    }
-    return null;
-}
-
-function saveCached($key, $data) {
-    if (!is_dir(CACHE_PATH)) mkdir(CACHE_PATH, 0755, true);
-    // Garbage collection: 5% chance
-    if (rand(1, 100) <= 5) {
-        $files = glob(CACHE_PATH . '*');
-        $now = time();
-        foreach ($files as $f) {
-            if (is_file($f) && ($now - filemtime($f) >= 86400)) @unlink($f);
-        }
-    }
-    file_put_contents(CACHE_PATH . md5($key) . '.json', json_encode($data));
-}
+function getCached($key, $duration = 3600) { return null; }
+function saveCached($key, $data) { return true; }
 
 // 4. ROUTER
 $action = $_GET['action'] ?? '';
