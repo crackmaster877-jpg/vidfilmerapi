@@ -111,6 +111,7 @@ function serveSeasonDetails($id, $season) {
 }
 
 // *** THE MONEY MAKER: V3.0 STREAMING LOGIC ***
+// *** THE MONEY MAKER: V3.2 STREAMING LOGIC ***
 function serveStreamSources($id, $type, $season, $episode) {
     // 1. Fetch External IDs (We need IMDB ID for 2Embed/GoDrive)
     $externalIds = fetchAPI("/{$type}/{$id}/external_ids", ['api_key' => TMDB_API_KEY]);
@@ -118,24 +119,25 @@ function serveStreamSources($id, $type, $season, $episode) {
 
     $servers = [];
 
-    // --- SERVER 1: VidSrc (Reliable, uses TMDB) ---
-    // Pattern: vidsrc.xyz/embed/movie/{tmdb}
-    $url1 = "https://vidsrc.xyz/embed/" . ($type === 'tv' ? "tv/{$id}/{$season}/{$episode}" : "movie/{$id}");
-    $servers[] = ['label' => 'Server 1 (Fast HD)', 'icon' => '🚀', 'data' => base64_encode($url1)];
+    // --- SERVER 1: VidSrc (Official Live Domains) ---
+    // Load balancing across the official domains to prevent blocks
+    $vidsrc_domains = [
+        'vidsrcme.ru', 
+        'vidsrcme.su', 
+        'vidsrc-me.ru', 
+        'vidsrc-me.su', 
+        'vsrc.su'
+    ];
+    $random_vidsrc = $vidsrc_domains[array_rand($vidsrc_domains)];
+    
+    $url1 = "https://{$random_vidsrc}/embed/" . ($type === 'tv' ? "tv/{$id}/{$season}/{$episode}" : "movie/{$id}");
+    $servers[] = ['label' => 'Server 1 (VidSrc Official)', 'icon' => '🚀', 'data' => base64_encode($url1)];
 
-    // --- SERVER 2: SuperEmbed (The Redirector) ---
-    // Logic: Server-side CURL to resolve the final link
-    $finalSuperEmbed = resolveSuperEmbed($imdbId, $id, $season, $episode, $type);
-    if ($finalSuperEmbed) {
-        $servers[] = ['label' => 'Server 2 (Multi-Lang)', 'icon' => '🌍', 'data' => base64_encode($finalSuperEmbed)];
-    } else {
-        // Fallback to VidSrc.to if SuperEmbed fails
-        $fallback = "https://vidsrc.to/embed/" . ($type === 'tv' ? "tv/{$id}/{$season}/{$episode}" : "movie/{$id}");
-        $servers[] = ['label' => 'Server 2 (Backup)', 'icon' => '⚡', 'data' => base64_encode($fallback)];
-    }
+    // --- SERVER 2: AutoEmbed (Highly Reliable Alternative) ---
+    $url2 = "https://player.autoembed.cc/embed/" . ($type === 'tv' ? "tv/{$id}/{$season}/{$episode}" : "movie/{$id}");
+    $servers[] = ['label' => 'Server 2 (AutoEmbed)', 'icon' => '⚡', 'data' => base64_encode($url2)];
 
     // --- SERVER 3: 2Embed (Strict IMDB Pattern) ---
-    // Pattern: 2embed.cc/embed/{imdb}
     if ($imdbId) {
         $url3 = "https://www.2embed.cc/embed/{$imdbId}";
         if ($type === 'tv') $url3 .= "&s={$season}&e={$episode}";
@@ -143,8 +145,6 @@ function serveStreamSources($id, $type, $season, $episode) {
     }
 
     // --- SERVER 4: GoDrive (User Specific Pattern) ---
-    // Movie: player.php?imdb={imdb}
-    // TV: player.php?type=series&tmdb={tmdb}&season={s}&episode={e}
     $url4 = "";
     if ($type === 'movie' && $imdbId) {
         $url4 = "https://godriveplayer.com/player.php?imdb={$imdbId}";
@@ -155,6 +155,11 @@ function serveStreamSources($id, $type, $season, $episode) {
     if ($url4) {
         $servers[] = ['label' => 'Server 4 (Premium)', 'icon' => '💎', 'data' => base64_encode($url4)];
     }
+
+    // --- SERVER 5: MultiEmbed (Failsafe Backup) ---
+    $url5 = "https://multiembed.mov/?video_id={$id}&tmdb=1";
+    if ($type === 'tv') $url5 .= "&s={$season}&e={$episode}";
+    $servers[] = ['label' => 'Server 5 (Backup)', 'icon' => '🌍', 'data' => base64_encode($url5)];
 
     echo json_encode([
         'status' => 'success',
