@@ -26,6 +26,9 @@ if (in_array($origin, $ALLOWED_ORIGINS)) {
 header('Content-Type: application/json');
 header('X-Robots-Tag: noindex, nofollow'); 
 
+// FIXES EXTRA LOADING TIME
+header('Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400');
+
 // 2. CONFIGURATION
 define('TMDB_API_KEY', '1ca74281e9b4d40433c2e8840a78d841');
 define('TMDB_BASE_URL', 'https://api.themoviedb.org/3');
