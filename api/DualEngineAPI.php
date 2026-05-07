@@ -1,7 +1,5 @@
 <?php
 // =========================================================
-//  MONEY PRINTING ENGINE V3.1 (DOMAIN UPDATE)
-//  - Added: filmy4webmoviesdownload.blogspot.com
 //  - Auto IMDB ID Extraction (Fixes 404)
 //  - SuperEmbed Server-Side Resolver
 //  - GoDrive/2Embed Exact Pattern Logic
