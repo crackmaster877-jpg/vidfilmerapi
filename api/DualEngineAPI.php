@@ -131,7 +131,7 @@ function serveStreamSources($id, $type, $season, $episode) {
     $random_vidsrc = $vidsrc_domains[array_rand($vidsrc_domains)];
     
     $url1 = "https://{$random_vidsrc}/embed/" . ($type === 'tv' ? "tv/{$id}/{$season}/{$episode}" : "movie/{$id}");
-    $servers[] = ['label' => 'Server 1 (VidSrc Official)', 'icon' => '🚀', 'data' => base64_encode($url1)];
+    $servers[] = ['label' => 'Server 1 (DEFAULT)', 'icon' => '🚀', 'data' => base64_encode($url1)];
 
     // --- SERVER 2: AutoEmbed (Highly Reliable Alternative) ---
     $url2 = "https://player.autoembed.cc/embed/" . ($type === 'tv' ? "tv/{$id}/{$season}/{$episode}" : "movie/{$id}");
